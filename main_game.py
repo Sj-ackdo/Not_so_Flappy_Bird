@@ -9,6 +9,7 @@ DEVICE = "/dev/video0"
 pygame.init()
 clock = pygame.time.Clock()
 screen_size = (640, 480)
+screen_size = (1280, 720)
 screen = pygame.display.set_mode(screen_size)
 pygame.display.set_caption("Not so Flappy Bird")
 
