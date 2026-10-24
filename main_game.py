@@ -11,6 +11,9 @@ screen = pygame.display.set_mode(screen_size)
 pygame.display.set_caption("Not so Flappy Bird")
 
 cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+cap.set(cv2.CAP_PROP_FPS, 30)
 
 thread = threading.Thread(target=landmark.hand_landmarker, args=(cap,), daemon=True)
 
@@ -36,6 +39,7 @@ try:
 
         pygame.display.flip()
         clock.tick(30)
+
 except KeyboardInterrupt:
     print("\n Graceful shutdown...")
 finally:
