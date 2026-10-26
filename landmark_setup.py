@@ -16,6 +16,7 @@ mp_drawing = mp.tasks.vision.drawing_utils
 mp_drawing_styles = mp.tasks.vision.drawing_styles
 
 latest_frame = None
+mid_hand = None
 
 MARGIN = 10  # pixels
 FONT_SIZE = 1
@@ -23,8 +24,11 @@ FONT_THICKNESS = 1
 HANDEDNESS_TEXT_COLOR = (88, 205, 54) # vibrant green
 
 def draw_landmarks_on_image(rgb_image, detection_result):
+    global mid_hand
+
     annotated_image = np.copy(rgb_image)
     if detection_result is None:
+        mid_hand = None
         return annotated_image
 
     hand_landmarks_list = detection_result.hand_landmarks
@@ -47,6 +51,10 @@ def draw_landmarks_on_image(rgb_image, detection_result):
         height, width, _ = annotated_image.shape
         x_coordinates = [landmark.x for landmark in hand_landmarks]
         y_coordinates = [landmark.y for landmark in hand_landmarks]
+        
+        #for hand in hand_landmarks_list: 
+        mid_hand = (int(sum(x_coordinates)/len(x_coordinates) * width), 
+                    int(sum(y_coordinates)/len(y_coordinates) * height))
         text_x = int(min(x_coordinates) * width)
         text_y = int(min(y_coordinates) * height) - MARGIN
 
@@ -61,7 +69,6 @@ def print_result(result: HandLandmarkerResult, output_image: mp.Image, timestamp
     global latest_frame
     global annotated_image
 
-
     rgb_image = output_image.numpy_view()
     annotated_image = draw_landmarks_on_image(rgb_image, result)
     latest_frame = cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR)
@@ -70,6 +77,6 @@ def print_result(result: HandLandmarkerResult, output_image: mp.Image, timestamp
 options = HandLandmarkerOptions(
     base_options = BaseOptions(model_asset_path='./hand_landmarker.task'),
     running_mode = VisionRunningMode.LIVE_STREAM,
-    num_hands = 2,
+    num_hands = 1,
     result_callback = print_result
 )
