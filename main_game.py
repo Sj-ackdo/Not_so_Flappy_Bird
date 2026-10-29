@@ -23,12 +23,14 @@ cap = cv2.VideoCapture(DEVICE, cv2.CAP_V4L2)
 #cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 #cap.set(cv2.CAP_PROP_FPS, 30)
 
+font = pygame.font.SysFont("sans", 40)
 
+text = pygame.image.load("assets/game_over.png").convert_alpha()
 
-pipe = pygame.image.load("pipe_image.png").convert_alpha()
+pipe = pygame.image.load("assets/pipe_image.png").convert_alpha()
 flip_pipe = pygame.transform.flip(pipe, False, True)
 
-player_image = pygame.image.load("chimken.png").convert_alpha()
+player_image = pygame.image.load("assets/chimken.png").convert_alpha()
 player = player.Sprite(player_image, screen)
 
 thread = threading.Thread(target=landmark.hand_landmarker, args=(cap,), daemon=True)
@@ -66,7 +68,12 @@ try:
                     player.draw_player(mid_hand)
                     pipe_spawner.update(player.player_rect)
                 pipe_spawner.draw()
-             
+                point_counter = font.render(str(pipe_spawner.points), True, (0,0,0))
+                screen.blit(point_counter , (0,0))
+            elif pp.stop:
+                screen.blit(text, text.get_rect(center = screen.get_rect().center))
+                point_counter = font.render(f"Score: {str(pipe_spawner.points)}", True, (0,0,0))
+                screen.blit(point_counter , (0,0))
 
         pygame.display.flip()
         clock.tick(30)

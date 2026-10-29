@@ -53,8 +53,15 @@ def draw_landmarks_on_image(rgb_image, detection_result):
         y_coordinates = [landmark.y for landmark in hand_landmarks]
         
         #for hand in hand_landmarks_list: 
-        mid_hand = (int(sum(x_coordinates)/len(x_coordinates) * width), 
-                    int(sum(y_coordinates)/len(y_coordinates) * height))
+        #mid_hand = (int(sum(x_coordinates)/len(x_coordinates) * width), 
+        #            int(sum(y_coordinates)/len(y_coordinates) * height))
+
+        palm_indices = [0, 5, 9, 13, 17]
+        mid_hand = (
+            int(sum(hand_landmarks[i].x for i in palm_indices)/len(palm_indices) * width),
+            int(sum(hand_landmarks[i].y for i in palm_indices)/len(palm_indices) * height)
+        )
+
         text_x = int(min(x_coordinates) * width)
         text_y = int(min(y_coordinates) * height) - MARGIN
 
